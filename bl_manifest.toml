@@ -1,5 +1,5 @@
 schema_version = "1.0.0"
-id = "jeweler_3d_studio"
+id = "jeweler3dstudio"
 version = "0.1.0"
 name = "Jeweler 3D Studio"
 tagline = "Modular industrial jewelry design and production suite for Blender 4.2+"
