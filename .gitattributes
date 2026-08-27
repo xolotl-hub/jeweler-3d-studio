@@ -1,0 +1,5 @@
+# Excluir infraestructura de gobernanza y control del ZIP descargado / empaquetado del Addon
+.agents export-ignore
+.skill export-ignore
+overview export-ignore
+.gitmodules export-ignore
