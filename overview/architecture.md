@@ -9,7 +9,7 @@
 ```mermaid
 graph TD
     subgraph Manifest ["📦 Extension Manifest System"]
-        M[bl_manifest.toml]
+        M[blender_manifest.toml]
     end
 
     subgraph EntryPoint ["🚀 Central Lifecycle Management"]
@@ -17,7 +17,7 @@ graph TD
     end
 
     subgraph UI ["🖥️ UI & Interaction Layer (ui/)"]
-        P["panels.py\nVIEW3D_PT_jeweler_3d_studio\n(N-Panel Collapsible Sections)"]
+        P["panels.py\nVIEW3D_PT_jeweler_3d_studio / PROPERTIES_PT_jeweler_3d_studio\n(N-Panel & Properties Scene Tab Collapsible Sections)"]
         D["dialogs.py\nJ3D_OT_export_report\n(Modal Production Report Exporter)"]
         G["gizmos.py\nJ3D_GGT_gem_controls\n(Interactive 3D Viewport Handles)"]
     end
@@ -65,7 +65,7 @@ graph TD
 
 | Capa | Archivos / Módulos | Clase / Función Principal | Responsabilidad |
 |---|---|---|---|
-| **Manifiesto** | `bl_manifest.toml` | Standard TOML Manifest | Metadatos de la extensión, versión mínima de Blender (4.2.0), tags y licencias. |
+| **Manifiesto** | `blender_manifest.toml` | Standard TOML Manifest | Metadatos de la extensión, versión mínima de Blender (4.2.0), tags y licencias. |
 | **Lifecycle** | `__init__.py` | `register()`, `unregister()` | Recarga dinámica `importlib.reload()` y registro simétrico secuencial de paquetes `core`, `ui` y `assets`. |
 | **Core Init** | `core/__init__.py` | `register()`, `unregister()` | Punto de montaje modular del motor CAD con verificación resiliente `hasattr`. |
 | **UI Init** | `ui/__init__.py` | `register()`, `unregister()` | Registro de paneles N-Panel, diálogos modales y GizmoGroups. |

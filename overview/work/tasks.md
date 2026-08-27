@@ -4,13 +4,13 @@
 
 ## 🎯 Tarea Actual
 
-- **ID:** `[wX]`
-- **Descripción:** 
+- **ID:** `[w6]` (Completado)
+- **Descripción:** Refactorizar `ui/panels.py` a paneles independientes de nivel superior (`VIEW3D_PT_j3d_*`), idénticos a la arquitectura de Jewelcraft, eliminando sub-paneles con contenedor vacío.
 
 ## 🏷️ Clasificación
 
 - [ ] **Problema (Bug):** Comportamiento inesperado o fallo funcional.
-- [ ] **Mejora (Feature):** Nueva capacidad o refactor de valor.
+- [X] **Mejora (Feature):** Nueva capacidad o refactor de valor.
 - [ ] **Deuda / Refactor:** Limpieza de código o estructuración técnica.
 
 

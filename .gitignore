@@ -7,3 +7,7 @@ __pycache__/
 .DS_Store
 .vscode/
 .idea/
+
+# Local build assets & legacy reference
+jeweler3dstudio.zip
+overview/legacy/
