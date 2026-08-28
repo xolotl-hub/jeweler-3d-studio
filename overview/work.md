@@ -4,6 +4,9 @@
 
 | ID | Tipo | Estado | Resumen | Archivo de Detalle |
 |---|---|---|---|---|
+| w12 | tarea | en progreso | Herramienta Talla (Tallas US con medias tallas, por defecto 7.0, Curva/Cilindro, ventana de ajuste) | `overview/work/tasks.md` |
+| w9 | tarea | en progreso | Arquitectura UI limpia de 6 paneles y subpaneles con operador de prueba `j3d.dummy_cube` | `overview/work/tasks.md` |
+| w7 | tarea | en progreso | 1 botón simple en Gemas y Engastes (`j3d.add_gem`) y 1 botón simple en Cortadores y Garras (`j3d.add_cutters`) | `overview/work/tasks.md` |
 
 Tipos: `tarea`, `bug`, `deuda`. Estados: `pendiente`, `en progreso`, `bloqueado`, `hecho`, `no verificado`.
 
@@ -21,6 +24,12 @@ Tipos: `tarea`, `bug`, `deuda`. Estados: `pendiente`, `en progreso`, `bloqueado`
 | w4 | tarea | Gemini 3.6 Flash (Medium) | Refactorización de UI a sub-paneles nativos de Blender (`bl_parent_id`), resolviendo el anidamiento visual de cajas. | 2026-08-27 |
 | w5 | tarea | Gemini 3.6 Flash (Medium) | Visor modal emergente con `template_icon_view`, iconos PNG de cortes, recuadro de previsualización grande y botones OK/Cancel. | 2026-08-27 |
 | w6 | tarea | Gemini 3.6 Flash (Medium) | Estructura de paneles independientes de nivel superior en la pestaña Jeweler 3D (idéntico a Jewelcraft). | 2026-08-27 |
+| w7 | tarea | Gemini 3.6 Flash (Medium) | Simplificación de UI a 1 botón funcional ultra-simple por sección (Anillo, Gema, Cortador, Métricas). | 2026-08-27 |
+| w8 | tarea | Gemini 3.6 Flash (Medium) | Eliminación del panel `VIEW3D_PT_j3d_gems` ("Gemas y Engastes") de `ui/panels.py`. | 2026-08-27 |
+| w9 | tarea | Gemini 3.6 Flash (Medium) | Estructura limpia de 6 paneles y subpaneles con operador base `j3d.dummy_cube` para construcción progresiva. | 2026-08-27 |
+| w10 | tarea | Gemini 3.6 Flash (Medium) | Arquitectura completa de 6 paneles y 13 sub-paneles en `ui/panels.py` + Registro del backlog `p1`-`p7` en `pendientes.md`. | 2026-08-27 |
+| w11 | tarea | Gemini 3.6 Flash (Medium) | Configuración de `bl_options = {'DEFAULT_CLOSED'}` en sub-paneles excepto Visor de Gemas. | 2026-08-27 |
+| w12 | tarea | Gemini 3.6 Flash (Medium) | Herramienta Talla implementada en `core/ring.py` (Tallas US 3.0-13.5 con medias tallas, default US 7.0, selector doble Curva/Cilindro y panel emergente de ajuste). | 2026-08-27 |
 
 ---
 

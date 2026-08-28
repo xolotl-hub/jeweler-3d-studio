@@ -4,8 +4,8 @@
 
 ## 🎯 Tarea Actual
 
-- **ID:** `[w6]` (Completado)
-- **Descripción:** Refactorizar `ui/panels.py` a paneles independientes de nivel superior (`VIEW3D_PT_j3d_*`), idénticos a la arquitectura de Jewelcraft, eliminando sub-paneles con contenedor vacío.
+- **ID:** `[w12]` (Completado)
+- **Descripción:** Herramienta de Talla implementada en `core/ring.py` y `ui/panels.py`: Desplegable de tallas US (3.0 a 13.5 con medias tallas, por defecto US 7.0 / 17.32mm), selector doble (Curva Bézier / Cilindro Malla), botón "Crear Talla" y ventana de re-ajuste en esquina inferior izquierda ("Adjust Last Operation").
 
 ## 🏷️ Clasificación
 

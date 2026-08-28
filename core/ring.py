@@ -1,31 +1,50 @@
 """
-Jeweler 3D Studio - Core Ring Shank Module
-Provides parametric generation of ring shanks with customizable US/EU sizes and profile sections.
+Jeweler 3D Studio - Core Ring Shank & Size Module
+Provides parametric generation of ring size references (US Sizes with half sizes)
+and ring shank geometry (Bezier Curves / Mesh Cylinders).
 """
 
-import math
 from typing import Dict, Tuple, List
+import math
 import bpy
+import bmesh
 from bpy.props import EnumProperty, FloatProperty, StringProperty
 from bpy.types import Operator, PropertyGroup
 
-# Ring US Size to Inner Diameter in mm
+# Complete US Ring Size Chart (US Size -> Inner Diameter in mm)
 US_RING_SIZES: Dict[str, float] = {
-    "4": 14.86,
-    "5": 15.70,
-    "6": 16.51,
-    "7": 17.32,
-    "8": 18.14,
-    "9": 18.95,
-    "10": 19.76,
-    "11": 20.57,
-    "12": 21.39,
-    "13": 22.20,
+    "3.0": 14.05,
+    "3.5": 14.45,
+    "4.0": 14.86,
+    "4.5": 15.27,
+    "5.0": 15.70,
+    "5.5": 16.10,
+    "6.0": 16.51,
+    "6.5": 16.92,
+    "7.0": 17.32,  # Default
+    "7.5": 17.73,
+    "8.0": 18.14,
+    "8.5": 18.54,
+    "9.0": 18.95,
+    "9.5": 19.35,
+    "10.0": 19.76,
+    "10.5": 20.17,
+    "11.0": 20.57,
+    "11.5": 20.98,
+    "12.0": 21.39,
+    "12.5": 21.79,
+    "13.0": 22.20,
+    "13.5": 22.61,
 }
 
 US_SIZE_ITEMS: List[Tuple[str, str, str]] = [
-    (k, f"US {k} ({v:.2f} mm)", f"Talla US {k} con diámetro interno {v:.2f} mm")
+    (k, f"US {k} ({v:.2f} mm)", f"Talla US {k} - Diámetro interno {v:.2f} mm")
     for k, v in US_RING_SIZES.items()
+]
+
+GEOMETRY_TYPE_ITEMS: List[Tuple[str, str, str, str, int]] = [
+    ("CURVE", "Curva Bézier", "Genera una curva circular Bézier 3D para el perfil del anillo", "CURVE_NCIRCLE", 0),
+    ("CYLINDER", "Cilindro Malla", "Genera una malla 3D de cilindro como referencia de talla", "MESH_CYLINDER", 1),
 ]
 
 PROFILE_ITEMS: List[Tuple[str, str, str]] = [
@@ -35,136 +54,89 @@ PROFILE_ITEMS: List[Tuple[str, str, str]] = [
 ]
 
 
-class J3D_RingProperties(PropertyGroup):
-    """Properties for parametric ring shank customization."""
-    us_size: EnumProperty(
-        name="Talla US",
-        description="Talla del anillo según estándares US/Internacionales",
-        items=US_SIZE_ITEMS,
-        default="7"
-    ) # type: ignore
-
-    profile_type: EnumProperty(
-        name="Perfil del Metal",
-        description="Forma de la sección transversal del anillo",
-        items=PROFILE_ITEMS,
-        default="MEDIA_CANA"
-    ) # type: ignore
-
-    width_top: FloatProperty(
-        name="Ancho Superior (mm)",
-        description="Ancho del perfil en la parte superior/cabeza del anillo",
-        default=4.0,
-        min=1.0,
-        max=25.0,
-        unit='LENGTH'
-    ) # type: ignore
-
-    width_bottom: FloatProperty(
-        name="Ancho Inferior (mm)",
-        description="Ancho del perfil en la base del anillo",
-        default=2.5,
-        min=1.0,
-        max=20.0,
-        unit='LENGTH'
-    ) # type: ignore
-
-    thickness: FloatProperty(
-        name="Grosor (mm)",
-        description="Espesor del perfil metálico del anillo",
-        default=1.8,
-        min=0.8,
-        max=10.0,
-        unit='LENGTH'
-    ) # type: ignore
-
-
-class J3D_OT_create_ring_shank(Operator):
-    """Genera un cuerpo de anillo paramétrico (Ring Shank) según talla y perfil"""
-    bl_idname = "j3d.create_ring_shank"
-    bl_label = "Crear Anillo Base"
-    bl_description = "Genera una nueva geometría de anillo paramétrico según los parámetros configurados"
+class J3D_OT_create_ring_size(Operator):
+    """Genera la geometría base de Talla de Anillo (Curva o Cilindro)"""
+    bl_idname = "j3d.create_ring_size"
+    bl_label = "Crear Talla de Anillo"
+    bl_description = "Crea la referencia de talla de anillo según la talla US seleccionada"
     bl_options = {'REGISTER', 'UNDO'}
 
     us_size: EnumProperty(
         name="Talla US",
+        description="Selección de talla estándar US (incluye medias tallas)",
         items=US_SIZE_ITEMS,
-        default="7"
+        default="7.0"
     ) # type: ignore
 
-    profile_type: EnumProperty(
-        name="Perfil",
-        items=PROFILE_ITEMS,
-        default="MEDIA_CANA"
-    ) # type: ignore
-
-    width_top: FloatProperty(
-        name="Ancho Superior (mm)",
-        default=4.0,
-        min=1.0,
-        max=25.0
-    ) # type: ignore
-
-    width_bottom: FloatProperty(
-        name="Ancho Inferior (mm)",
-        default=2.5,
-        min=1.0,
-        max=20.0
-    ) # type: ignore
-
-    thickness: FloatProperty(
-        name="Grosor (mm)",
-        default=1.8,
-        min=0.8,
-        max=10.0
+    geometry_type: EnumProperty(
+        name="Tipo de Geometría",
+        description="Formato del objeto de salida (Curva Bézier o Cilindro 3D)",
+        items=GEOMETRY_TYPE_ITEMS,
+        default="CURVE"
     ) # type: ignore
 
     @classmethod
     def poll(cls, context: bpy.types.Context) -> bool:
-        """Solo ejecutable en Object Mode."""
         return context.mode == 'OBJECT'
+
+    def draw(self, context: bpy.types.Context) -> None:
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.prop(self, "us_size", text="Talla US")
+
+        row = layout.row(align=True)
+        row.label(text="Tipo de Salida")
+        row.prop(self, "geometry_type", expand=True)
 
     def execute(self, context: bpy.types.Context) -> set[str]:
         inner_dia_mm = US_RING_SIZES.get(self.us_size, 17.32)
-        inner_radius_m = (inner_dia_mm / 2.0) / 1000.0  # Convert mm to Blender meters
-        thickness_m = self.thickness / 1000.0
-        width_m = self.width_top / 1000.0
+        # Diámetro en metros (escena Blender en metros, default)
+        diameter_m = inner_dia_mm / 1000.0   # ej: 17.32mm -> 0.01732m
+        radius_m   = diameter_m / 2.0        # ej: 0.01732m -> 0.00866m
 
-        # Create circle curve for shank path
-        curve_data = bpy.data.curves.new(name="J3D_Ring_Path", type='CURVE')
-        curve_data.dimensions = '3D'
-        curve_data.use_path = True
+        loc = context.scene.cursor.location
 
-        spline = curve_data.splines.new('NURBS')
-        spline.use_cyclic_u = True
+        if self.geometry_type == 'CURVE':
+            # Primitivo nativo Blender: Bezier Circle, radio default 1m
+            bpy.ops.curve.primitive_bezier_circle_add(
+                radius=1.0,
+                enter_editmode=False,
+                align='WORLD',
+                location=loc
+            )
+            obj = context.active_object
+            # Escalar al diámetro real en metros
+            obj.scale = (radius_m, radius_m, radius_m)
+            bpy.ops.object.transform_apply(scale=True)
 
-        # Create circle points
-        r = inner_radius_m + (thickness_m / 2.0)
-        num_points = 8
-        spline.points.add(num_points - 1)
-        for i in range(num_points):
-            angle = (2.0 * math.pi * i) / num_points
-            x = r * math.cos(angle)
-            y = r * math.sin(angle)
-            spline.points[i].co = (x, y, 0.0, 1.0)
+        else:  # CYLINDER
+            # Primitivo nativo Blender: Cylinder, radio default 1m
+            bpy.ops.mesh.primitive_cylinder_add(
+                vertices=64,
+                radius=1.0,
+                depth=1.0,
+                enter_editmode=False,
+                align='WORLD',
+                location=loc
+            )
+            obj = context.active_object
+            # Escalar: XY al radio real, Z a 3mm de grosor de referencia
+            obj.scale = (radius_m, radius_m, 0.003)
+            bpy.ops.object.transform_apply(scale=True)
 
-        curve_obj = bpy.data.objects.new(name=f"Ring_Shank_US{self.us_size}", object_data=curve_data)
-        curve_obj["j3d_type"] = "RING_SHANK"
-        curve_obj["j3d_us_size"] = self.us_size
-        curve_obj["j3d_profile"] = self.profile_type
+        obj.name = f"RingSize_US_{self.us_size}"
+        obj["j3d_type"] = "RING_SIZE"
+        obj["j3d_us_size"] = self.us_size
+        obj["j3d_inner_dia_mm"] = inner_dia_mm
 
-        # Link to active collection
-        context.collection.objects.link(curve_obj)
-        context.view_layer.objects.active = curve_obj
-        curve_obj.select_set(True)
-
-        self.report({'INFO'}, f"Anillo Talla US {self.us_size} creado exitosamente.")
+        self.report({'INFO'}, f"Talla US {self.us_size} ({inner_dia_mm:.2f} mm = {diameter_m*1000:.2f} mm) creada.")
         return {'FINISHED'}
 
 
 classes = (
-    J3D_RingProperties,
-    J3D_OT_create_ring_shank,
+    J3D_OT_create_ring_size,
 )
 
 
