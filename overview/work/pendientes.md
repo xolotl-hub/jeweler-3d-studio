@@ -13,7 +13,6 @@
 | p5 | 2026-08-27 | Arquitectura UI | Módulo de Canastas y Galerías: Generador de biseles inferiores y soportes para piedras centrales. | `pendiente` |
 | p6 | 2026-08-27 | Visión Administrativa | Cotizador Administrativo ($/g metal + gemas + mano de obra) y Generador de Ficha Técnica (HTML/PDF). | `pendiente` |
 | p7 | 2026-08-27 | Visión Administrativa | Verificador de Seguridad para Impresión 3D/Fundición (Grosor mínimo < 0.8mm y compensación de merma %). | `pendiente` |
-| **p8** | **2026-08-27** | **Bug Escala - Herramienta Talla** | **⚠️ IMPORTANTE: La conversión mm→metros en `core/ring.py` no produce el tamaño correcto en escena Blender (metros). Estrategia actual: crear primitivo radio=1.0 y escalar con `transform_apply`. Verificar y validar que la escena en metros produce las dimensiones físicas correctas antes de continuar con más herramientas.** | **`pendiente`** |
 
 - **Estados:** `pendiente`, `en progreso`, `promovido_a_task`, `descartado`, `hecho`.
 
@@ -23,3 +22,5 @@
 
 | ID | Fecha Resolución | Origen / Contexto | Descripción / Solución | Agente |
 |---|---|---|---|---|
+| p8 | 2026-09-01 | Bug Escala - Herramienta Talla | Corregida escala mm→BU en `core/ring.py` dividiendo por `unit_scale` (1 BU = 1 mm). Talla US 7 genera 17.32 BU. | Gemini 3.6 Flash (Medium) |
+

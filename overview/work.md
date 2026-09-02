@@ -4,9 +4,7 @@
 
 | ID | Tipo | Estado | Resumen | Archivo de Detalle |
 |---|---|---|---|---|
-| w12 | tarea | en progreso | Herramienta Talla (Tallas US con medias tallas, por defecto 7.0, Curva/Cilindro, ventana de ajuste) | `overview/work/tasks.md` |
-| w9 | tarea | en progreso | Arquitectura UI limpia de 6 paneles y subpaneles con operador de prueba `j3d.dummy_cube` | `overview/work/tasks.md` |
-| w7 | tarea | en progreso | 1 botón simple en Gemas y Engastes (`j3d.add_gem`) y 1 botón simple en Cortadores y Garras (`j3d.add_cutters`) | `overview/work/tasks.md` |
+
 
 Tipos: `tarea`, `bug`, `deuda`. Estados: `pendiente`, `en progreso`, `bloqueado`, `hecho`, `no verificado`.
 
@@ -18,6 +16,21 @@ Tipos: `tarea`, `bug`, `deuda`. Estados: `pendiente`, `en progreso`, `bloqueado`
 
 | ID | Tipo | Resuelto por (Agente) | Causa Raíz / Resumen Solución | Fecha |
 |---|---|---|---|---|
+| w21 | tarea | Claude Sonnet 4.6 (Thinking) | Reemplazado `j3d.dummy_cube` por `j3d.add_gem` en `ui/panels.py` (Visor de Gemas). Botón ahora genera Diamante 3D facetado de 5mm. | 2026-09-01 |
+| w20 | tarea | Gemini 3.6 Flash (Medium) | Ajustado `J3D_OT_dummy_cube` (`core/gems.py`) a tamaño de 5 mm en la escala de joyería (1 BU = 1 mm). | 2026-09-01 |
+| w19 | bug | Gemini 3.6 Flash (Medium) | Restaurado `J3D_OT_dummy_cube` en `core/gems.py` devolviendo los botones a los subpaneles UI. | 2026-09-01 |
+
+| w18 | tarea | Gemini 3.6 Flash (Medium) | Operador `J3D_OT_add_gem` (`j3d.add_gem`) en `core/gems.py`: Diamante Redondo 5mm (0.52ct) por defecto, 7 cortes, materiales BSDF e integración en Visor de Gemas (`ui/panels.py`). | 2026-09-01 |
+| w17 | bug | Gemini 3.6 Flash (Medium) | Cambiado `spline.points.add(3)` por `spline.bezier_points.add(3)` en `core/ring.py`. Resuelto RuntimeError. | 2026-09-01 |
+| w16 | bug | Gemini 3.6 Flash (Medium) | Refactor en `core/ring.py` con `object_data_add(context, obdata, operator=self)` y generadores nativos BMesh/Curve. Corregida alineación View. | 2026-09-01 |
+
+| w15 | bug | Gemini 3.6 Flash (Medium) | Eliminada división por 1000 en `core/ring.py` e implementada escala 1 BU = 1 mm adaptable a `unit_scale`. Talla US 7 mide 17.32 BU. Resuelto `p8`. | 2026-09-01 |
+
+| w14 | tarea | Gemini 3.6 Flash (Medium) | Script `pack_extension.py` en raíz que empaqueta únicamente la extensión de Blender en `dist/jeweler3dstudio-0.1.0.zip` (50 archivos, 444 KB), omitiendo entornos de dev. | 2026-09-01 |
+
+| w13 | tarea | Gemini 3.6 Flash (Medium) | Integración de `AddObjectHelper` en `J3D_OT_create_ring_size` (`core/ring.py`) agregando `align`, `location` y `rotation` al Redo Panel en curvas y cilindros. | 2026-09-01 |
+
+
 | w1 | tarea | Gemini 3.6 Flash (Medium) | Auditoría completa de extensión Blender 4.2+ (Manifiesto, UI context safety, registro modular). Corregido `core/__init__.py`. | 2026-08-26 |
 | w2 | tarea | Gemini 3.6 Flash (Medium) | Generador paramétrico procedural de mallas 3D para gemas en `core/gems.py` con facetas reales (6 cortes), materiales BSDF y estimador de quilates. | 2026-08-27 |
 | w3 | tarea | Gemini 3.6 Flash (Medium) | Visor modal interactivo de gemas, presets de tamaño rápido (1.0 a 6.5mm) y operador de edición `j3d.edit_gem`. | 2026-08-27 |

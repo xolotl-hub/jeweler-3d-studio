@@ -90,7 +90,9 @@ class VIEW3D_PT_j3d_sub_gem_visor(Panel):
 
     def draw(self, context: Context) -> None:
         col = self.layout.column(align=True)
-        col.operator("j3d.dummy_cube", icon='CUBE', text="Añadir Cubo (Visor Gemas)")
+        col.operator("j3d.add_gem", icon='MESH_ICOSPHERE', text="Añadir Diamante (5 mm)")
+
+
 
 
 class VIEW3D_PT_j3d_sub_gem_map(Panel):
